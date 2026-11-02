@@ -50,12 +50,12 @@ async function boot(){if(tk){nav();load();return}
 function loginUI(){$('#app').innerHTML=`<div style="margin-top:60px;text-align:center"><img src="icon-192.png" width="72" style="border-radius:20px"><h2 style="margin-top:12px">Tapedoi</h2><p class="l">Masukkan PIN 6 digit</p>
 <input id="pin" type="password" inputmode="numeric" maxlength="6" style="text-align:center;font-size:26px;letter-spacing:10px;margin-top:18px"><button class="b" onclick="login()">Masuk</button></div>`;
  $('#pin').oninput=e=>{if(e.target.value.length==6)login()}}
-async function login(){try{const r=await api({a:'login',pin:$('#pin').value});done(r)}catch(e){toast(e.message,false);$('#pin').value=''}}
+async function login(){try{const r=await api({a:'login',pin:$('#pin').value});done(r,r.user.foto)}catch(e){toast(e.message,false);$('#pin').value=''}}
 function regUI(){$('#app').innerHTML=`<h2 style="margin-top:30px">Daftar Tapedoi</h2><div class="c"><img id="pv" class="pf" src="icon-192.png"><label class="l">Foto profil</label><input type="file" accept="image/*" onchange="pf(this)">
 <label class="l">Nama</label><input id="rn"><label class="l">Email</label><input id="re" type="email"><label class="l">PIN 6 digit</label><input id="rp" type="password" inputmode="numeric" maxlength="6"><button class="b" onclick="reg()">Daftar</button></div>`}
 async function pf(i){if(i.files[0]){IMG=await img(i.files[0],400);$('#pv').src=IMG}}
 async function reg(){try{const p=$('#rp').value;if(!/^\d{6}$/.test(p))throw Error('PIN harus 6 digit angka');done(await api({a:'register',nama:$('#rn').value,email:$('#re').value,pin:p,foto:IMG}),IMG)}catch(e){toast(e.message,false)}}
-function done(r,f){if(f)localStorage.pf=f;tk=localStorage.tk=r.token;U=r.user;localStorage.u=JSON.stringify(U);IMG='';toast('Selamat datang, '+U.nama);nav();load()}
+function done(r,f){if(f)localStorage.pf=f;tk=localStorage.tk=r.token;U={nama:r.user.nama,email:r.user.email};localStorage.u=JSON.stringify(U);IMG='';toast('Selamat datang, '+U.nama);nav();load()}
 async function load(){render();try{const r=await api({a:'list'});S={tx:r.tx,aset:r.aset,rek:r.rek};localStorage.tp=JSON.stringify(S);render()}catch(e){toast(e.message,false)}}
 function nav(){document.body.insertAdjacentHTML('beforeend','');if($('nav'))return;document.body.insertAdjacentHTML('beforeend',`<nav>${[['dash','🏠','Dashboard'],['keu','💸','Keuangan'],['aset','📈','Aset'],['set','⚙️','Settings']].map((t,i)=>(i==2?'<button id="fab" onclick="formTx()" aria-label="Rekam Transaksi">+</button>':'')+`<button id="n_${t[0]}" onclick="go('${t[0]}')">${t[1]}<br>${t[2]}</button>`).join('')}</nav>`)}
 function go(t){tab=t;pg=1;render()}
