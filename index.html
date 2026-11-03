@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Tapedoi</title>
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#090025">
 <style>
 :root{--bg:#f1edfa;--g:#e4d9fa;--cd:rgba(255,255,255,.88);--tx:#15121f;--mu:#7d7890;--ac:#8b5cf6;--pill:#d9b8fb;--tile:#f0eff3;--in:#12a150;--out:#ee4d5a;--bd:rgba(40,20,80,.07)}
 [data-t=dark]{--bg:#120f1c;--g:#2a1f4a;--cd:rgba(34,29,50,.88);--tx:#f2eefc;--mu:#a49fba;--tile:rgba(255,255,255,.07);--bd:rgba(255,255,255,.09);--pill:#6d3fc4}
@@ -51,11 +51,11 @@ function logout(){localStorage.removeItem('tk');tk='';document.querySelector('na
 async function boot(){if(tk){nav();load();return}
  $('#app').innerHTML='<p style="margin-top:80px;text-align:center" class="l">Memuat…</p>';
  try{const s=await api({a:'status'});s.registered?loginUI():regUI()}catch(e){$('#app').innerHTML='<p class="c out">Gagal terhubung ke server: '+e.message+'. Periksa URL API dan deployment Apps Script.</p><button class="b" onclick="boot()">Coba lagi</button>'}}
-function loginUI(){$('#app').innerHTML=`<div style="margin-top:60px;text-align:center"><img src="icon-192.png" width="72" style="border-radius:20px"><h2 style="margin-top:12px">Tapedoi</h2><p class="l">Masukkan PIN 6 digit</p>
+function loginUI(){$('#app').innerHTML=`<div style="margin-top:60px;text-align:center"><img src="logo.png" width="104" height="104" alt="Tapedoi" style="border-radius:26px;box-shadow:0 10px 30px rgba(124,77,255,.4)"><h2 style="margin-top:12px">Tapedoi</h2><p class="l">Masukkan PIN 6 digit</p>
 <input id="pin" type="password" inputmode="numeric" maxlength="6" style="text-align:center;font-size:26px;letter-spacing:10px;margin-top:18px"><button class="b" onclick="login()">Masuk</button></div>`;
  $('#pin').oninput=e=>{if(e.target.value.length==6)login()}}
 async function login(){try{const r=await api({a:'login',pin:$('#pin').value});done(r,r.user.foto)}catch(e){toast(e.message,false);$('#pin').value=''}}
-function regUI(){$('#app').innerHTML=`<h2 style="margin-top:30px">Daftar Tapedoi</h2><div class="c"><img id="pv" class="pf" src="icon-192.png"><label class="l">Foto profil</label><input type="file" accept="image/*" onchange="pf(this)">
+function regUI(){$('#app').innerHTML=`<img src="logo.png" width="84" height="84" alt="Tapedoi" style="display:block;margin:24px auto 0;border-radius:22px;box-shadow:0 8px 24px rgba(124,77,255,.35)"><h2 style="margin-top:12px;text-align:center">Daftar Tapedoi</h2><div class="c"><img id="pv" class="pf" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><label class="l">Foto profil</label><input type="file" accept="image/*" onchange="pf(this)">
 <label class="l">Nama</label><input id="rn"><label class="l">Email</label><input id="re" type="email"><label class="l">PIN 6 digit</label><input id="rp" type="password" inputmode="numeric" maxlength="6"><button class="b" onclick="reg()">Daftar</button></div>`}
 async function pf(i){if(i.files[0]){IMG=await img(i.files[0],400);$('#pv').src=IMG}}
 async function reg(){try{const p=$('#rp').value;if(!/^\d{6}$/.test(p))throw Error('PIN harus 6 digit angka');done(await api({a:'register',nama:$('#rn').value,email:$('#re').value,pin:p,foto:IMG}),IMG)}catch(e){toast(e.message,false)}}
